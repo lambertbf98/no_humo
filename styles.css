@@ -83,7 +83,8 @@ body {
 
 /* App Container */
 .app {
-    max-width: 430px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     min-height: 100vh;
     min-height: 100dvh;
@@ -540,10 +541,10 @@ body {
 .nav {
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
     width: 100%;
-    max-width: 430px;
+    max-width: 100%;
     height: var(--nav-height);
     background: var(--bg-elevated);
     border-top: 1px solid var(--border);
@@ -1100,23 +1101,37 @@ body {
     }
 }
 
-/* Samsung Galaxy Note S20 optimizations */
-@media screen and (min-width: 400px) and (max-width: 450px) {
+/* Samsung Galaxy Note S20 & all mobile optimizations */
+@media screen and (max-width: 600px) {
     .app {
+        width: 100%;
         max-width: 100%;
     }
 
     .count-number {
-        font-size: 80px;
+        font-size: 68px;
     }
 
     .hero {
-        padding: 35px 24px;
+        padding: 28px 20px;
+        margin: 0 0 24px 0;
+        border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    .main {
+        padding: 0 16px 100px 16px;
     }
 
     .btn-add {
-        padding: 20px 56px;
-        font-size: 18px;
+        padding: 18px 48px;
+        font-size: 17px;
+    }
+
+    .nav {
+        left: 0;
+        right: 0;
+        transform: none;
+        max-width: 100%;
     }
 }
 
