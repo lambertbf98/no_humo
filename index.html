@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Controla tu consumo de tabaco">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <title>No Humo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo">💨</span>
+                <span class="app-name">No Humo</span>
+            </div>
+            <button class="btn-settings" id="btnSettings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Hero Stats -->
+            <section class="hero">
+                <div class="hero-date" id="heroDate">Lunes, 23 Diciembre</div>
+                <div class="hero-count">
+                    <span class="count-number" id="todayCount">0</span>
+                    <span class="count-label">cigarrillos hoy</span>
+                </div>
+                <div class="hero-goal" id="heroGoal">
+                    <span class="goal-progress"></span>
+                    <span class="goal-text">Meta: 0/10</span>
+                </div>
+            </section>
+
+            <!-- Add Button -->
+            <section class="add-section">
+                <button class="btn-add" id="btnAdd">
+                    <span class="btn-add-plus">+</span>
+                    <span class="btn-add-text">Registrar</span>
+                </button>
+                <p class="add-hint">Mantén pulsado para elegir hora</p>
+            </section>
+
+            <!-- Quick Stats -->
+            <section class="stats-row">
+                <div class="stat-box">
+                    <span class="stat-number" id="weekCount">0</span>
+                    <span class="stat-label">Esta semana</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="avgCount">0</span>
+                    <span class="stat-label">Media diaria</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="bestDay">-</span>
+                    <span class="stat-label">Mejor día</span>
+                </div>
+            </section>
+
+            <!-- Weekly Chart -->
+            <section class="chart-section">
+                <div class="section-title">
+                    <h2>Esta semana</h2>
+                    <div class="week-nav">
+                        <button class="btn-week" id="btnPrevWeek">‹</button>
+                        <span id="weekLabel">Actual</span>
+                        <button class="btn-week" id="btnNextWeek">›</button>
+                    </div>
+                </div>
+                <div class="chart" id="weekChart"></div>
+            </section>
+
+            <!-- Today's Log -->
+            <section class="log-section">
+                <div class="section-title">
+                    <h2>Hoy</h2>
+                    <span class="log-count" id="logCount">0 registros</span>
+                </div>
+                <div class="log-list" id="logList">
+                    <div class="log-empty">
+                        <span>✨</span>
+                        <p>Sin registros hoy</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="nav">
+            <button class="nav-btn active" data-view="home">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Inicio</span>
+            </button>
+            <button class="nav-btn" data-view="calendar">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>Calendario</span>
+            </button>
+            <button class="nav-btn" data-view="stats">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>Stats</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal" id="modalAdd">
+        <div class="modal-bg"></div>
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Registrar cigarrillo</h3>
+                <button class="modal-close" id="closeAdd">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Fecha</label>
+                    <input type="date" id="inputDate">
+                </div>
+                <div class="input-group">
+                    <label>Hora</label>
+                    <input type="time" id="inputTime">
+                </div>
+                <div class="input-group">
+                    <label>Nota (opcional)</label>
+                    <input type="text" id="inputNote" placeholder="Ej: con el café">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelAdd">Cancelar</button>
+                <button class="btn-confirm" id="confirmAdd">Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="modalSettings">
+        <div class="modal-bg"></div>
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Ajustes</h3>
+                <button class="modal-close" id="closeSettings">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Meta diaria</label>
+                    <input type="number" id="inputGoal" min="1" max="100" value="10">
+                    <span class="input-hint">Cigarrillos máximos al día</span>
+                </div>
+                <div class="setting-row">
+                    <span>Tema oscuro</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleTheme" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button class="btn-danger" id="btnReset">Borrar todos los datos</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-confirm" id="saveSettings">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="view" id="viewCalendar">
+        <header class="header">
+            <button class="btn-back" id="backCalendar">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <span class="view-title">Calendario</span>
+            <div style="width:40px"></div>
+        </header>
+        <main class="view-content">
+            <div class="calendar-nav">
+                <button class="btn-month" id="prevMonth">‹</button>
+                <span id="monthLabel">Diciembre 2024</span>
+                <button class="btn-month" id="nextMonth">›</button>
+            </div>
+            <div class="calendar" id="calendar"></div>
+            <div class="day-detail" id="dayDetail"></div>
+        </main>
+    </div>
+
+    <!-- Stats View -->
+    <div class="view" id="viewStats">
+        <header class="header">
+            <button class="btn-back" id="backStats">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <span class="view-title">Estadísticas</span>
+            <div style="width:40px"></div>
+        </header>
+        <main class="view-content">
+            <div class="stats-grid" id="statsGrid"></div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMsg">Registrado ✓</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
