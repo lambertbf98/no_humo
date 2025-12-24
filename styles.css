@@ -236,28 +236,41 @@ body {
     font-weight: 600;
 }
 
-/* Add Button */
+/* Add Buttons */
 .add-section {
     text-align: center;
     margin-bottom: 28px;
 }
 
-.btn-add {
-    display: inline-flex;
-    align-items: center;
+.add-buttons {
+    display: flex;
     gap: 12px;
-    padding: 18px 48px;
+    justify-content: center;
+}
+
+.btn-add {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 28px;
     background: var(--accent-gradient);
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius);
     color: white;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 20px var(--accent-glow), 0 0 40px var(--accent-glow);
+    box-shadow: 0 4px 20px var(--accent-glow);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    min-width: 120px;
+}
+
+.btn-add.btn-half {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
 }
 
 .btn-add::after {
@@ -271,7 +284,11 @@ body {
 
 .btn-add:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px var(--accent-glow), 0 0 60px var(--accent-glow);
+    box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+.btn-add.btn-half:hover {
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
 }
 
 .btn-add:hover::after {
@@ -282,9 +299,13 @@ body {
     transform: scale(0.98);
 }
 
-.btn-add-plus {
-    font-size: 24px;
-    font-weight: 300;
+.btn-add-icon {
+    font-size: 28px;
+}
+
+.btn-add-text {
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .add-hint {
@@ -512,6 +533,14 @@ body {
 .log-note {
     font-size: 13px;
     color: var(--text-muted);
+}
+
+.log-amount {
+    font-size: 14px;
+    padding: 2px 8px;
+    background: var(--bg-main);
+    border-radius: 6px;
+    color: var(--text-secondary);
 }
 
 .btn-delete {

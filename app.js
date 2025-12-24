@@ -75,13 +75,14 @@ function getWeekDays(start) {
 // RECORDS
 // ============================================
 
-function addRecord(date, time, note = '') {
+function addRecord(date, time, note = '', amount = 1) {
     const data = getData();
     data.records.push({
         id: Date.now(),
         date,
         time,
         note,
+        amount, // 1 = completo, 0.5 = medio
         ts: new Date(`${date}T${time}`).getTime()
     });
     data.records.sort((a, b) => b.ts - a.ts);
@@ -99,7 +100,8 @@ function getRecordsForDate(date) {
 }
 
 function getCountForDate(date) {
-    return getRecordsForDate(date).length;
+    const records = getRecordsForDate(date);
+    return records.reduce((sum, r) => sum + (r.amount || 1), 0);
 }
 
 function getTodayCount() {
@@ -111,7 +113,8 @@ function getWeekData(weekStart) {
     const data = getData().records;
     const result = {};
     days.forEach(day => {
-        result[day] = data.filter(r => r.date === day).length;
+        const dayRecords = data.filter(r => r.date === day);
+        result[day] = dayRecords.reduce((sum, r) => sum + (r.amount || 1), 0);
     });
     return result;
 }
@@ -133,12 +136,11 @@ function getStats() {
 
     const byDate = {};
     data.forEach(r => {
-        byDate[r.date] = (byDate[r.date] || 0) + 1;
+        byDate[r.date] = (byDate[r.date] || 0) + (r.amount || 1);
     });
 
     const dates = Object.keys(byDate).sort();
-    const counts = Object.values(byDate);
-    const total = data.length;
+    const total = Object.values(byDate).reduce((a, b) => a + b, 0);
     const days = dates.length;
     const avg = (total / days).toFixed(1);
 
@@ -269,6 +271,7 @@ function updateLog() {
         <div class="log-item" data-id="${r.id}">
             <div class="log-info">
                 <span class="log-time">${r.time}</span>
+                <span class="log-amount">${(r.amount || 1) === 0.5 ? '½' : '🚬'}</span>
                 ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
             </div>
             <button class="btn-delete" onclick="handleDelete(${r.id})">
@@ -351,7 +354,8 @@ function renderCalendar() {
     // Days
     for (let d = 1; d <= lastDay.getDate(); d++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        const count = data.filter(r => r.date === dateStr).length;
+        const dayRecords = data.filter(r => r.date === dateStr);
+        const count = dayRecords.reduce((sum, r) => sum + (r.amount || 1), 0);
         const isToday = dateStr === today;
         const isSelected = dateStr === selectedCalDay;
 
@@ -398,15 +402,17 @@ function renderDayDetail() {
         return;
     }
 
+    const totalAmount = records.reduce((sum, r) => sum + (r.amount || 1), 0);
     detail.innerHTML = `
         <div class="day-detail-header">
             <span class="day-detail-date">${dateStr}</span>
-            <span class="day-detail-total">${records.length} cigarrillos</span>
+            <span class="day-detail-total">${totalAmount} cigarrillos</span>
         </div>
         ${records.map(r => `
             <div class="log-item">
                 <div class="log-info">
                     <span class="log-time">${r.time}</span>
+                    <span class="log-amount">${(r.amount || 1) === 0.5 ? '½' : '🚬'}</span>
                     ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
                 </div>
             </div>
@@ -499,46 +505,57 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     updateAll();
 
-    // Add button - quick tap
-    const btnAdd = document.getElementById('btnAdd');
-    let pressTimer;
-    let longPress = false;
+    // Amount for modal (1 = full, 0.5 = half)
+    let currentAmount = 1;
 
-    btnAdd.addEventListener('click', (e) => {
-        if (longPress) {
-            longPress = false;
-            return;
-        }
-        const now = new Date();
-        addRecord(formatDate(now), formatTime(now));
-        btnAdd.classList.add('pulse');
-        setTimeout(() => btnAdd.classList.remove('pulse'), 200);
-        updateAll();
-        showToast('Registrado ✓');
-    });
+    // Setup for both add buttons
+    function setupAddButton(btn, amount) {
+        let pressTimer;
+        let longPress = false;
 
-    // Long press for custom time
-    btnAdd.addEventListener('mousedown', startPress);
-    btnAdd.addEventListener('touchstart', startPress);
-    btnAdd.addEventListener('mouseup', cancelPress);
-    btnAdd.addEventListener('touchend', cancelPress);
-    btnAdd.addEventListener('mouseleave', cancelPress);
-
-    function startPress(e) {
-        longPress = false;
-        pressTimer = setTimeout(() => {
-            longPress = true;
+        btn.addEventListener('click', (e) => {
+            if (longPress) {
+                longPress = false;
+                return;
+            }
             const now = new Date();
-            document.getElementById('inputDate').value = formatDate(now);
-            document.getElementById('inputTime').value = formatTime(now);
-            document.getElementById('inputNote').value = '';
-            openModal('modalAdd');
-        }, 400);
+            addRecord(formatDate(now), formatTime(now), '', amount);
+            btn.classList.add('pulse');
+            setTimeout(() => btn.classList.remove('pulse'), 200);
+            updateAll();
+            showToast(amount === 1 ? 'Registrado ✓' : '½ Registrado ✓');
+        });
+
+        // Long press for custom time
+        btn.addEventListener('mousedown', startPress);
+        btn.addEventListener('touchstart', startPress);
+        btn.addEventListener('mouseup', cancelPress);
+        btn.addEventListener('touchend', cancelPress);
+        btn.addEventListener('mouseleave', cancelPress);
+
+        function startPress(e) {
+            longPress = false;
+            pressTimer = setTimeout(() => {
+                longPress = true;
+                currentAmount = amount;
+                const now = new Date();
+                document.getElementById('inputDate').value = formatDate(now);
+                document.getElementById('inputTime').value = formatTime(now);
+                document.getElementById('inputNote').value = '';
+                openModal('modalAdd');
+            }, 400);
+        }
+
+        function cancelPress() {
+            clearTimeout(pressTimer);
+        }
     }
 
-    function cancelPress() {
-        clearTimeout(pressTimer);
-    }
+    // Setup both buttons
+    const btnAddFull = document.getElementById('btnAddFull');
+    const btnAddHalf = document.getElementById('btnAddHalf');
+    setupAddButton(btnAddFull, 1);
+    setupAddButton(btnAddHalf, 0.5);
 
     // Add modal
     document.getElementById('closeAdd').onclick = () => closeModal('modalAdd');
@@ -550,10 +567,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const time = document.getElementById('inputTime').value;
         const note = document.getElementById('inputNote').value;
         if (date && time) {
-            addRecord(date, time, note);
+            addRecord(date, time, note, currentAmount);
             closeModal('modalAdd');
             updateAll();
-            showToast('Registrado ✓');
+            showToast(currentAmount === 1 ? 'Registrado ✓' : '½ Registrado ✓');
         }
     };
 
