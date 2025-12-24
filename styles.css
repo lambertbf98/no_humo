@@ -252,6 +252,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     padding: 18px 28px;
     background: var(--accent-gradient);
@@ -265,7 +266,8 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    min-width: 120px;
+    min-width: 140px;
+    height: 90px;
 }
 
 .btn-add.btn-half {
