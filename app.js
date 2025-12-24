@@ -269,12 +269,12 @@ function updateLog() {
 
     list.innerHTML = records.map(r => {
         const amt = parseFloat(r.amount) || 1;
-        const label = amt < 1 ? 'Medio Cigarro' : 'Un Cigarro';
+        const iconClass = amt < 1 ? 'log-icon half' : 'log-icon full';
         return `
         <div class="log-item" data-id="${r.id}">
             <div class="log-info">
                 <span class="log-time">${r.time}</span>
-                <span class="log-amount">${label}</span>
+                <span class="${iconClass}">🚬</span>
                 ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
             </div>
             <button class="btn-delete" onclick="handleDelete(${r.id})">
@@ -413,12 +413,12 @@ function renderDayDetail() {
         </div>
         ${records.map(r => {
             const amt = parseFloat(r.amount) || 1;
-            const label = amt < 1 ? 'Medio Cigarro' : 'Un Cigarro';
+            const iconClass = amt < 1 ? 'log-icon half' : 'log-icon full';
             return `
             <div class="log-item">
                 <div class="log-info">
                     <span class="log-time">${r.time}</span>
-                    <span class="log-amount">${label}</span>
+                    <span class="${iconClass}">🚬</span>
                     ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
                 </div>
             </div>

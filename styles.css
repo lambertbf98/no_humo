@@ -303,6 +303,14 @@ body {
     font-size: 28px;
 }
 
+.btn-add-icon.big {
+    font-size: 36px;
+}
+
+.btn-add-icon.small {
+    font-size: 22px;
+}
+
 .btn-add-text {
     font-size: 14px;
     font-weight: 600;
@@ -535,12 +543,17 @@ body {
     color: var(--text-muted);
 }
 
-.log-amount {
-    font-size: 14px;
-    padding: 2px 8px;
-    background: var(--bg-main);
-    border-radius: 6px;
-    color: var(--text-secondary);
+.log-icon {
+    display: inline-block;
+}
+
+.log-icon.full {
+    font-size: 24px;
+}
+
+.log-icon.half {
+    font-size: 16px;
+    opacity: 0.7;
 }
 
 .btn-delete {
