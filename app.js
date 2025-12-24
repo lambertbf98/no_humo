@@ -271,7 +271,7 @@ function updateLog() {
         <div class="log-item" data-id="${r.id}">
             <div class="log-info">
                 <span class="log-time">${r.time}</span>
-                <span class="log-amount">${(r.amount || 1) === 0.5 ? '½' : '🚬'}</span>
+                <span class="log-amount">🚬 ${(r.amount || 1) === 0.5 ? 'Medio' : 'Completo'}</span>
                 ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
             </div>
             <button class="btn-delete" onclick="handleDelete(${r.id})">
@@ -412,7 +412,7 @@ function renderDayDetail() {
             <div class="log-item">
                 <div class="log-info">
                     <span class="log-time">${r.time}</span>
-                    <span class="log-amount">${(r.amount || 1) === 0.5 ? '½' : '🚬'}</span>
+                    <span class="log-amount">🚬 ${(r.amount || 1) === 0.5 ? 'Medio' : 'Completo'}</span>
                     ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
                 </div>
             </div>
