@@ -269,8 +269,8 @@ body {
 }
 
 .btn-add.btn-half {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    box-shadow: 0 4px 20px rgba(107, 114, 128, 0.3);
 }
 
 .btn-add::after {
@@ -288,7 +288,7 @@ body {
 }
 
 .btn-add.btn-half:hover {
-    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 8px 30px rgba(107, 114, 128, 0.4);
 }
 
 .btn-add:hover::after {

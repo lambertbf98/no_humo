@@ -267,11 +267,14 @@ function updateLog() {
         return;
     }
 
-    list.innerHTML = records.map(r => `
+    list.innerHTML = records.map(r => {
+        const amt = parseFloat(r.amount) || 1;
+        const label = amt < 1 ? 'Medio Cigarro' : 'Un Cigarro';
+        return `
         <div class="log-item" data-id="${r.id}">
             <div class="log-info">
                 <span class="log-time">${r.time}</span>
-                <span class="log-amount">🚬 ${(r.amount || 1) === 0.5 ? 'Medio' : 'Completo'}</span>
+                <span class="log-amount">${label}</span>
                 ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
             </div>
             <button class="btn-delete" onclick="handleDelete(${r.id})">
@@ -280,7 +283,7 @@ function updateLog() {
                 </svg>
             </button>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function handleDelete(id) {
@@ -408,15 +411,18 @@ function renderDayDetail() {
             <span class="day-detail-date">${dateStr}</span>
             <span class="day-detail-total">${totalAmount} cigarrillos</span>
         </div>
-        ${records.map(r => `
+        ${records.map(r => {
+            const amt = parseFloat(r.amount) || 1;
+            const label = amt < 1 ? 'Medio Cigarro' : 'Un Cigarro';
+            return `
             <div class="log-item">
                 <div class="log-info">
                     <span class="log-time">${r.time}</span>
-                    <span class="log-amount">🚬 ${(r.amount || 1) === 0.5 ? 'Medio' : 'Completo'}</span>
+                    <span class="log-amount">${label}</span>
                     ${r.note ? `<span class="log-note">${r.note}</span>` : ''}
                 </div>
             </div>
-        `).join('')}
+        `}).join('')}
     `;
 }
 
